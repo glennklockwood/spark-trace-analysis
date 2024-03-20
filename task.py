@@ -48,12 +48,12 @@ class Task:
       OPEN_TIME_KEY = "Shuffle Open Time"
       if OPEN_TIME_KEY in shuffle_write_metrics:
         shuffle_open_time = shuffle_write_metrics[OPEN_TIME_KEY] / 1.0e6
-        print "Shuffle open time: ", shuffle_open_time
+        print("Shuffle open time: ", shuffle_open_time)
         self.shuffle_write_time += shuffle_open_time
       CLOSE_TIME_KEY = "Shuffle Close Time"
       if CLOSE_TIME_KEY in shuffle_write_metrics:
         shuffle_close_time = shuffle_write_metrics[CLOSE_TIME_KEY] / 1.0e6
-        print "Shuffle close time: ", shuffle_close_time
+        print("Shuffle close time: ", shuffle_close_time)
         self.shuffle_write_time += shuffle_close_time
       self.shuffle_mb_written = shuffle_write_metrics["Shuffle Bytes Written"] / 1048576.
 
@@ -132,7 +132,7 @@ class Task:
       serialized_items = int(items_dict["SERIALIZATED_ITEMS"])
       # Samples are times in nanoseconds.
       serialized_samples = [int(sample) for sample in items_dict["SERIALIZED_SAMPLES"].split(",")]
-      print "Serialized %s items, sampled %s" % (serialized_items, len(serialized_samples))
+      print("Serialized %s items, sampled %s" % (serialized_items, len(serialized_samples)))
       self.estimated_serialization_millis = serialized_items * numpy.mean(serialized_samples[0::10]) / 1e6
 
     self.estimated_deserialization_millis = 0
@@ -140,7 +140,7 @@ class Task:
       deserialized_items = int(items_dict["DESERIALIZED_ITEMS"])
       deserialized_samples = [
         int(sample) for sample in items_dict["DESERIALIZATION_TIME_NANOS"].split(",")]
-      print "Deserialized %s items, sampled %s" % (deserialized_items, len(deserialized_samples))
+      print("Deserialized %s items, sampled %s" % (deserialized_items, len(deserialized_samples)))
       self.estimated_deserialization_millis = (
         deserialized_items * numpy.median(deserialized_samples[0::1]) / 1e6)
 

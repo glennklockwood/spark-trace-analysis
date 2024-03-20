@@ -46,13 +46,13 @@ class Job:
       if len(s.tasks) == 0:
         stages_to_drop.append(id)
     for id in stages_to_drop:
-      print "Dropping stage %s" % id
+      print("Dropping stage %s" % id)
       del self.stages[id]
 
     # Compute the amount of overlapped time between stages
     # (there should just be two stages, at the beginning, that overlap and run concurrently).
     # This computation assumes that not more than two stages overlap.
-    print ["%s: %s tasks" % (id, len(s.tasks)) for id, s in self.stages.iteritems()]
+    print(["%s: %s tasks" % (id, len(s.tasks)) for id, s in self.stages.iteritems()])
     start_and_finish_times = [(id, s.start_time, s.conservative_finish_time())
         for id, s in self.stages.iteritems()]
     start_and_finish_times.sort(key = lambda x: x[1])
@@ -63,7 +63,7 @@ class Job:
     for id, start, finish in start_and_finish_times:
       if start < old_end:
         self.overlap += old_end - start
-        print "Overlap:", self.overlap, "between ", id, "and", previous_id
+        print("Overlap:", self.overlap, "between ", id, "and", previous_id)
         self.stages_to_combine.add(id)
         self.stages_to_combine.add(previous_id)
         old_end = max(old_end, finish)
@@ -71,7 +71,7 @@ class Job:
         old_end = finish
         previous_id = id
 
-    print "Stages to combine: ", self.stages_to_combine
+    print("Stages to combine: ", self.stages_to_combine)
 
     self.combined_stages_concurrency = -1
     if len(self.stages_to_combine) > 0:
@@ -86,10 +86,10 @@ class Job:
 
   def print_stage_info(self):
     for id, stage in self.stages.iteritems():
-      print "STAGE %s: %s" % (id, stage.verbose_str())
+      print("STAGE %s: %s" % (id, stage.verbose_str()))
 
   def print_heading(self, text):
-    print "\n******** %s ********" % text
+    print("\n******** %s ********" % text)
 
   def get_simulated_runtime(self, waterfall_prefix=""):
     """ Returns the simulated runtime for the job.
@@ -130,7 +130,7 @@ class Job:
   def simulated_runtime_over_actual(self, prefix):
     simulated_runtime = self.get_simulated_runtime(waterfall_prefix=prefix)
     # TODO: Incorporate Shark setup time here!
-    print "Simulated runtime: ", simulated_runtime, "actual time: ", self.original_runtime()
+    print("Simulated runtime: ", simulated_runtime, "actual time: ", self.original_runtime())
     return simulated_runtime * 1.0 / self.original_runtime()
 
   def original_runtime(self):
@@ -275,8 +275,8 @@ class Job:
           for start, finish in start_finish_times]
         total_median_progress_rate_runtime += no_stragglers_runtime
         all_start_finish_times.append(start_finish_times_adjusted)
-        print "No stragglers runtime: ", no_stragglers_runtime
-        print "MAx concurrency: ", concurrency.get_max_concurrency(stage.tasks)
+        print("No stragglers runtime: ", no_stragglers_runtime)
+        print("MAx concurrency: ", concurrency.get_max_concurrency(stage.tasks))
 
     if len(runtimes_for_combined_stages) > 0:
       no_stragglers_runtime, start_finish_times = simulate.simulate(
@@ -299,15 +299,15 @@ class Job:
         total_runtime_combined_stages += stage.total_runtime()
       else:
         new_runtime = float(stage.total_runtime()) / concurrency.get_max_concurrency(stage.tasks)
-        print "New runtime: %s, original runtime: %s" % (new_runtime, stage.finish_time() - stage.start_time)
+        print("New runtime: %s, original runtime: %s" % (new_runtime, stage.finish_time() - stage.start_time))
         ideal_runtime += new_runtime
 
 
-    print "Total runtime combined: %s (concurrency %d" % (total_runtime_combined_stages, self.combined_stages_concurrency)
+    print("Total runtime combined: %s (concurrency %d" % (total_runtime_combined_stages, self.combined_stages_concurrency))
     ideal_runtime += float(total_runtime_combined_stages) / self.combined_stages_concurrency
-    print "Getting simulated runtime"
+    print("Getting simulated runtime")
     simulated_actual_runtime = self.get_simulated_runtime()
-    print "Ideal runtime for all: %s, simulated: %s" % (ideal_runtime, simulated_actual_runtime)
+    print("Ideal runtime for all: %s, simulated: %s" % (ideal_runtime, simulated_actual_runtime))
     return ideal_runtime / simulated_actual_runtime
 
   def replace_all_tasks_with_average_speedup(self, prefix):
@@ -388,7 +388,7 @@ class Job:
         total_no_stragglers_runtime += no_stragglers_runtime
         original_runtime = simulate.simulate(
           [task.runtime() for task in sorted_stage_tasks], max_concurrency)[0]
-        print ("%s: Original: %s, Orig (sim): %s, no stragg: %s (%s stragglers)" %
+        print("%s: Original: %s, Orig (sim): %s, no stragg: %s (%s stragglers)" %
           (id, stage.finish_time() - stage.start_time, original_runtime, no_stragglers_runtime,
            num_stragglers))
     if len(start_and_runtimes_for_combined_stages) > 0:
@@ -401,7 +401,7 @@ class Job:
       original_runtime = simulate.simulate(
         [x[1] for x in sorted(original_start_and_runtimes_for_combined_stages)],
         self.combined_stages_concurrency)[0]
-      print ("Combined: Original: %s, Orig (sim): %s, no stragg: %s (%s stragglers)" %
+      print("Combined: Original: %s, Orig (sim): %s, no stragg: %s (%s stragglers)" %
         (original_finish_time - original_start_time, original_runtime, new_runtime,
          num_stragglers_combined_stages))
       total_no_stragglers_runtime += new_runtime
@@ -469,20 +469,20 @@ class Job:
       faster_runtimes = [compute_faster_runtime(task) for task in tasks]
       faster_runtime = simulate.simulate(faster_runtimes, max_concurrency)[0]
       total_faster_time[0] += faster_runtime
-      print "Base: %s, faster: %s" % (base_runtime, faster_runtime)
+      print("Base: %s, faster: %s" % (base_runtime, faster_runtime))
 
     for id, stage in self.stages.iteritems():
-      print "STAGE", id, stage
+      print("STAGE", id, stage)
       if id in self.stages_to_combine:
         tasks_for_combined_stages.extend(stage.tasks)
       else:
         add_tasks_to_totals(stage.tasks)
 
     if len(tasks_for_combined_stages) > 0:
-      print "Combined stages", self.stages_to_combine
+      print("Combined stages", self.stages_to_combine)
       add_tasks_to_totals(tasks_for_combined_stages)
 
-    print "Faster time: %s, base time: %s" % (total_faster_time[0], total_time[0])
+    print("Faster time: %s, base time: %s" % (total_faster_time[0], total_time[0]))
     return total_faster_time[0] * 1.0 / total_time[0], total_time[0], total_faster_time[0]
 
   def fraction_time_scheduler_delay(self):
@@ -709,10 +709,10 @@ class Job:
       gc_end = compute_end + task.gc_time
       task_end = gc_end + task.shuffle_write_time + task.output_write_time
       if math.fabs((first_start + task_end) - task.finish_time) >= 0.1:
-        print "Mismatch at index %s" % i
-        print "%.1f" % (first_start + task_end)
-        print task.finish_time
-        print task
+        print("Mismatch at index %s" % i)
+        print("%.1f" % (first_start + task_end))
+        print(task.finish_time)
+        print(task)
         assert False
 
       # Write data to plot file.

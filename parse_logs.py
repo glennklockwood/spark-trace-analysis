@@ -24,10 +24,10 @@ class Analyzer:
     try:
       get_json(test_line)
       is_json = True
-      print "Parsing file %s as JSON" % filename
+      print("Parsing file %s as JSON" % filename)
     except:
       is_json = False
-      print "Parsing file %s as JobLogger output" % filename
+      print("Parsing file %s as JobLogger output" % filename)
     f.seek(0)
 
     for line in f:
@@ -41,7 +41,7 @@ class Analyzer:
             job_id = json_data["Job ID"]
           # Avoid using "Stage Infos" here, which was added in 1.2.0.
           stage_ids = json_data["Stage IDs"]
-          print "Stage ids: %s" % stage_ids
+          print("Stage ids: %s" % stage_ids)
           for stage_id in stage_ids:
             if stage_id not in self.jobs_for_stage:
               self.jobs_for_stage[stage_id] = [job_id]
@@ -56,10 +56,10 @@ class Analyzer:
         # The file will only contain information for one job.
         self.jobs[0].add_event(line, False)
 
-    print "Finished reading input data:"
+    print("Finished reading input data:")
     for job_id, job in self.jobs.iteritems():
       job.initialize_job()
-      print "Job", job_id, " has stages: ", job.stages.keys()
+      print("Job", job_id, " has stages: ", job.stages.keys())
 
   def output_all_waterfalls(self):
     for job_id, job in self.jobs.iteritems():
@@ -81,33 +81,33 @@ class Analyzer:
     job.write_waterfall(filename)
 
     fraction_time_scheduler_delay = job.fraction_time_scheduler_delay()
-    print ("\nFraction time scheduler delay: %s" % fraction_time_scheduler_delay)
+    print("\nFraction time scheduler delay: %s" % fraction_time_scheduler_delay)
     fraction_time_waiting_on_shuffle_read = job.fraction_time_waiting_on_shuffle_read()
-    print "\nFraction time waiting on shuffle read: %s" % fraction_time_waiting_on_shuffle_read
+    print("\nFraction time waiting on shuffle read: %s" % fraction_time_waiting_on_shuffle_read)
     no_input_disk_speedup = job.no_input_disk_speedup()[0]
-    print "Speedup from eliminating disk for input: %s" % no_input_disk_speedup
+    print("Speedup from eliminating disk for input: %s" % no_input_disk_speedup)
     no_output_disk_speedup = job.no_output_disk_speedup()[0]
-    print "Speedup from elimnating disk for output: %s" % no_output_disk_speedup
+    print("Speedup from elimnating disk for output: %s" % no_output_disk_speedup)
     no_shuffle_write_disk_speedup = job.no_shuffle_write_disk_speedup()[0]
-    print "Speedup from eliminating disk for shuffle write: %s" % no_shuffle_write_disk_speedup
+    print("Speedup from eliminating disk for shuffle write: %s" % no_shuffle_write_disk_speedup)
     no_shuffle_read_disk_speedup, throw_away, no_shuffle_read_runtime = \
       job.no_shuffle_read_disk_speedup()
-    print "Speedup from eliminating shuffle read: %s" % no_shuffle_read_disk_speedup
+    print("Speedup from eliminating shuffle read: %s" % no_shuffle_read_disk_speedup)
     no_disk_speedup, simulated_original_runtime, no_disk_runtime = job.no_disk_speedup()
-    print "No disk speedup: %s" % no_disk_speedup
+    print("No disk speedup: %s" % no_disk_speedup)
     fraction_time_using_disk = job.fraction_time_using_disk()
     no_network_speedup, not_used, no_network_runtime = job.no_network_speedup()
-    print "No network speedup: %s" % no_network_speedup
+    print("No network speedup: %s" % no_network_speedup)
     print("\nFraction of time spent writing/reading shuffle data to/from disk: %s" %
       fraction_time_using_disk)
     print("\nFraction of time spent garbage collecting: %s" %
       job.fraction_time_gc())
     no_compute_speedup = job.no_compute_speedup()[0]
-    print "\nSpeedup from eliminating compute: %s" % no_compute_speedup
+    print("\nSpeedup from eliminating compute: %s" % no_compute_speedup)
     fraction_time_waiting_on_compute = job.fraction_time_waiting_on_compute()
-    print "\nFraction of time waiting on compute: %s" % fraction_time_waiting_on_compute
+    print("\nFraction of time waiting on compute: %s" % fraction_time_waiting_on_compute)
     fraction_time_computing = job.fraction_time_computing()
-    print "\nFraction of time computing: %s" % fraction_time_computing
+    print("\nFraction of time computing: %s" % fraction_time_computing)
     
     replace_all_tasks_with_average_speedup = job.replace_all_tasks_with_average_speedup(filename)
     no_stragglers_replace_with_median_speedup = job.replace_all_tasks_with_median_speedup()
@@ -119,17 +119,17 @@ class Analyzer:
     no_stragglers_perfect_parallelism = \
       job.no_stragglers_perfect_parallelism_speedup()
     median_progress_rate_speedup = job.median_progress_rate_speedup(filename)
-    print (("\nSpeedup from eliminating stragglers: %s (perfect parallelism) %s (use average) "
+    print(("\nSpeedup from eliminating stragglers: %s (perfect parallelism) %s (use average) "
       "%s (use median) %s (1.5=>median) %s (95%%ile=>med) %s (median progress rate)") %
       (no_stragglers_perfect_parallelism, replace_all_tasks_with_average_speedup,
        no_stragglers_replace_with_median_speedup, no_stragglers_replace_ganesh_with_median_speedup,
        no_stragglers_replace_95_with_median_speedup, median_progress_rate_speedup))
 
     simulated_versus_actual = job.simulated_runtime_over_actual(filename)
-    print "\n Simulated versus actual runtime: ", simulated_versus_actual
+    print("\n Simulated versus actual runtime: ", simulated_versus_actual)
 
     if agg_results_filename != None:
-      print "Adding results to %s" % agg_results_filename
+      print("Adding results to %s" % agg_results_filename)
       f = open(agg_results_filename, "a")
       data = [
         filename.split("/")[1].split("_")[0],
