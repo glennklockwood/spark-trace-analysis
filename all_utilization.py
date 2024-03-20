@@ -24,12 +24,12 @@ def main(argv):
       print "Reading %s" % filename
       analyzer = parse_logs.Analyzer(full_name)
 
-      for (id, stage) in analyzer.stages.iteritems():
+      for (id, stage) in analyzer.stages.items():
         for task in stage.tasks:
           cpu_utilizations.append(task.total_cpu_utilization / 8.)
           network_utilizations.append(task.network_bytes_transmitted_ps / (1000*1000*1000))
           network_utilizations.append(task.network_bytes_received_ps / (1000*1000*1000))
-          for name, block_device_numbers in task.disk_utilization.iteritems():
+          for name, block_device_numbers in task.disk_utilization.items():
             if name in ["xvdb", "xvdf"]:
               disk_utilizations.append(block_device_numbers[0])
 

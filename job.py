@@ -42,7 +42,7 @@ class Job:
     """ Should be called after adding all events to the job. """
     # Drop empty stages.
     stages_to_drop = []
-    for id, s in self.stages.iteritems():
+    for id, s in self.stages.items():
       if len(s.tasks) == 0:
         stages_to_drop.append(id)
     for id in stages_to_drop:
@@ -52,9 +52,9 @@ class Job:
     # Compute the amount of overlapped time between stages
     # (there should just be two stages, at the beginning, that overlap and run concurrently).
     # This computation assumes that not more than two stages overlap.
-    print(["%s: %s tasks" % (id, len(s.tasks)) for id, s in self.stages.iteritems()])
+    print(["%s: %s tasks" % (id, len(s.tasks)) for id, s in self.stages.items()])
     start_and_finish_times = [(id, s.start_time, s.conservative_finish_time())
-        for id, s in self.stages.iteritems()]
+        for id, s in self.stages.items()]
     start_and_finish_times.sort(key = lambda x: x[1])
     self.overlap = 0
     old_end = 0
@@ -85,7 +85,7 @@ class Job:
     return [task for stage in self.stages.values() for task in stage.tasks]
 
   def print_stage_info(self):
-    for id, stage in self.stages.iteritems():
+    for id, stage in self.stages.items():
       print("STAGE %s: %s" % (id, stage.verbose_str()))
 
   def print_heading(self, text):
@@ -103,7 +103,7 @@ class Job:
     total_runtime = 0
     tasks_for_combined_stages = []
     all_start_finish_times = []
-    for id, stage in self.stages.iteritems():
+    for id, stage in self.stages.items():
       if id in self.stages_to_combine:
         tasks_for_combined_stages.extend(stage.tasks)
       else:
@@ -263,7 +263,7 @@ class Job:
     total_median_progress_rate_runtime = 0
     runtimes_for_combined_stages = []
     all_start_finish_times = []
-    for id, stage in self.stages.iteritems():
+    for id, stage in self.stages.items():
       median_rate_runtimes = stage.task_runtimes_with_median_progress_rate()
       if id in self.stages_to_combine:
         runtimes_for_combined_stages.extend(median_rate_runtimes)
@@ -294,7 +294,7 @@ class Job:
     """ Returns how fast the job would have run if time were perfectly spread across 32 slots. """
     ideal_runtime = 0
     total_runtime_combined_stages = 0
-    for id, stage in self.stages.iteritems():
+    for id, stage in self.stages.items():
       if id in self.stages_to_combine:
         total_runtime_combined_stages += stage.total_runtime()
       else:
@@ -320,7 +320,7 @@ class Job:
     total_no_stragglers_runtime = 0
     averaged_runtimes_for_combined_stages = []
     all_start_finish_times = []
-    for id, stage in self.stages.iteritems():
+    for id, stage in self.stages.items():
       averaged_runtimes = [stage.average_task_runtime()] * len(stage.tasks)
       if id in self.stages_to_combine:
         averaged_runtimes_for_combined_stages.extend(averaged_runtimes) 
@@ -362,7 +362,7 @@ class Job:
     start_and_runtimes_for_combined_stages = []
     original_start_and_runtimes_for_combined_stages = []
     num_stragglers_combined_stages = 0
-    for id, stage in self.stages.iteritems():
+    for id, stage in self.stages.items():
       runtimes = [task.runtime() for task in stage.tasks]
       median_runtime = numpy.percentile(runtimes, 50)
       threshold_runtime = threshold_fn(runtimes)
@@ -415,7 +415,7 @@ class Job:
     """
     total_no_stragglers_runtime = 0
     runtimes_for_combined_stages = []
-    for id, stage in self.stages.iteritems():
+    for id, stage in self.stages.items():
       runtimes = [task.runtime() for task in stage.tasks]
       median_runtime = numpy.median(runtimes)
       no_straggler_runtimes = [numpy.median(runtimes)] * len(stage.tasks)
@@ -471,7 +471,7 @@ class Job:
       total_faster_time[0] += faster_runtime
       print("Base: %s, faster: %s" % (base_runtime, faster_runtime))
 
-    for id, stage in self.stages.iteritems():
+    for id, stage in self.stages.items():
       print("STAGE", id, stage)
       if id in self.stages_to_combine:
         tasks_for_combined_stages.extend(stage.tasks)
@@ -490,7 +490,7 @@ class Job:
     spent waiting on the scheduler?"""
     total_scheduler_delay = 0
     total_runtime = 0
-    for id, stage in self.stages.iteritems():
+    for id, stage in self.stages.items():
       total_scheduler_delay += sum([t.scheduler_delay for t in stage.tasks])
       total_runtime += stage.total_runtime()
     return total_scheduler_delay * 1.0 / total_runtime
@@ -503,7 +503,7 @@ class Job:
     # should equal total_runtime.
     total_runtime_no_shuffle_read = 0
     total_runtime = 0
-    for id, stage in self.stages.iteritems():
+    for id, stage in self.stages.items():
       total_fetch_wait += stage.total_fetch_wait()
       total_runtime_no_shuffle_read += stage.total_runtime_no_remote_shuffle_read()
       total_runtime += stage.total_runtime()
@@ -591,7 +591,7 @@ class Job:
     """ 
     total_disk_write_time = 0
     total_runtime = 0
-    for id, stage in self.stages.iteritems():
+    for id, stage in self.stages.items():
       stage_disk_write_time = 0
       stage_total_runtime = 0
       for task in stage.tasks:

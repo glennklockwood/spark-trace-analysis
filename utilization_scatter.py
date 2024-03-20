@@ -13,7 +13,7 @@ def main(argv):
 
   start_time = min([x.start_time for x in analyzer.stages.values()])
 
-  for (id, stage) in analyzer.stages.iteritems():
+  for (id, stage) in analyzer.stages.items():
     stage_filename = "%s_%s_utilization" % (filename, id)
     f = open(stage_filename, "w")
 

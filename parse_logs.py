@@ -57,17 +57,17 @@ class Analyzer:
         self.jobs[0].add_event(line, False)
 
     print("Finished reading input data:")
-    for job_id, job in self.jobs.iteritems():
+    for job_id, job in self.jobs.items():
       job.initialize_job()
       print("Job", job_id, " has stages: ", job.stages.keys())
 
   def output_all_waterfalls(self):
-    for job_id, job in self.jobs.iteritems():
+    for job_id, job in self.jobs.items():
       filename = "%s_%s" % (self.filename, job_id)
       job.write_waterfall(filename)
 
   def output_all_job_info(self, agg_results_filename):
-    for job_id, job in self.jobs.iteritems():
+    for job_id, job in self.jobs.items():
       filename = "%s_%s" % (self.filename, job_id)
       self.__output_job_info(job, filename, agg_results_filename)
 

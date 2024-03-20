@@ -226,7 +226,7 @@ class AbstractRpcServer(object):
     req = urllib2.Request(url, data=data, headers={"Accept": "text/plain"})
     if self.host_override:
       req.add_header("Host", self.host_override)
-    for key, value in self.extra_headers.iteritems():
+    for key, value in self.extra_headers.items():
       req.add_header(key, value)
     return req
 
@@ -1980,7 +1980,7 @@ def GuessVCSName(options):
     output is a string containing any interesting output from the vcs
     detection routine, or None if there is nothing interesting.
   """
-  for attribute, value in options.__dict__.iteritems():
+  for attribute, value in options.__dict__.items():
     if attribute.startswith("p4") and value != None:
       return (VCS_PERFORCE, None)
 
@@ -2317,7 +2317,7 @@ def RealMain(argv, data=None):
   # Send a hash of all the base file so the server can determine if a copy
   # already exists in an earlier patchset.
   base_hashes = ""
-  for file, info in files.iteritems():
+  for file, info in files.items():
     if not info[0] is None:
       checksum = md5(info[0]).hexdigest()
       if base_hashes:

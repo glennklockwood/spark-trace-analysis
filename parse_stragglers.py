@@ -42,7 +42,7 @@ def main(argv):
   filename = argv[0]
   analyzer = Analyzer(filename)
 
-  for id, stage in analyzer.stages.iteritems():
+  for id, stage in analyzer.stages.items():
     output_per_task_info(id, stage, filename)
 
 if __name__ == "__main__":

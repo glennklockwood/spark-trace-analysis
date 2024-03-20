@@ -24,9 +24,9 @@ def main(argv):
       print "Reading %s" % filename
       analyzer = parse_logs.Analyzer(full_name)
 
-      for (id, stage) in analyzer.stages.iteritems():
+      for (id, stage) in analyzer.stages.items():
         for task in stage.tasks:
-          for name, block_device_numbers in task.disk_utilization.iteritems():
+          for name, block_device_numbers in task.disk_utilization.items():
             if name in ["xvdb", "xvdf"]:
               effective_util = 0
               if block_device_numbers[0] > 0:
