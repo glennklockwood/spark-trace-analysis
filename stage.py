@@ -264,9 +264,9 @@ class Stage:
       if t.input_size_mb() > 0]
     median_progress_rate = numpy.median(progress_rates)
     def new_runtime(task):
-      if t.input_size_mb() > 0 and t.runtime() * 1.0 / t.input_size_mb() > median_progress_rate:
-        return t.input_size_mb() * median_progress_rate
-      return t.runtime()
+      if task.input_size_mb() > 0 and task.runtime() * 1.0 / task.input_size_mb() > median_progress_rate:
+        return task.input_size_mb() * median_progress_rate
+      return task.runtime()
     runtimes = [new_runtime(t) for t in self.tasks]
     return runtimes
 
